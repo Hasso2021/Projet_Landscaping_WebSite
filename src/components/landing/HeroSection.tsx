@@ -55,22 +55,6 @@ export function HeroSection() {
             </div>
           </div>
 
-          <div className="relative z-20 mt-3 w-full max-w-5xl px-0 md:absolute md:bottom-[-3rem] md:left-1/2 md:mt-0 md:-translate-x-1/2 md:px-6 lg:bottom-[-4.5rem]">
-            <div className="grid gap-4 rounded-xl border border-white/20 bg-[#0b2d16]/95 p-4 shadow-sm sm:grid-cols-3 sm:gap-3 sm:rounded-2xl sm:p-5 sm:shadow-xl">
-              {HIGHLIGHTS.map(({ title, description, Icon }) => (
-                <article key={title} className="flex items-start gap-2 rounded-lg p-1 text-white sm:gap-3 sm:rounded-xl sm:p-2">
-                  <div className="rounded-full bg-[#3f8f2f] p-1.5 sm:p-2.5">
-                    <Icon className="size-3.5 sm:size-4" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-semibold sm:text-base">{title}</h3>
-                    <p className="text-xs text-emerald-100 sm:text-sm">{description}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-
           <div className="mt-5 flex justify-center md:hidden">
             <Link
               to="/contact"
@@ -78,6 +62,22 @@ export function HeroSection() {
             >
               Get a Free Quote
             </Link>
+          </div>
+
+          <div className="static z-20 mt-4 w-full max-w-none translate-y-0 px-0 md:absolute md:bottom-[-3rem] md:left-1/2 md:mt-0 md:w-full md:max-w-5xl md:-translate-x-1/2 md:px-6 lg:bottom-[-4.5rem]">
+            <div className="flex flex-col gap-4 rounded-xl border border-white/20 bg-[#0b2d16]/95 p-5 shadow-sm md:grid md:grid-cols-3 md:gap-3 md:rounded-2xl md:p-5 md:shadow-xl">
+              {HIGHLIGHTS.map(({ title, description, Icon }) => (
+                <article key={title} className="flex items-start gap-2 rounded-lg p-1 text-white md:gap-3 md:rounded-xl md:p-2">
+                  <div className="rounded-full bg-[#3f8f2f] p-1.5 md:p-2.5">
+                    <Icon className="size-3.5 md:size-4" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-semibold md:text-base">{title}</h3>
+                    <p className="text-xs text-emerald-100 md:text-sm">{description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
       </div>
