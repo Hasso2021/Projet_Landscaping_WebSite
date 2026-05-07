@@ -42,7 +42,7 @@ export function HeroSection() {
             <div className="mb-12 mt-5 flex flex-col gap-3 sm:flex-row sm:items-center md:mb-0 md:mt-8">
               <Link
                 to="/contact"
-                className="inline-flex h-10 w-full max-w-sm items-center justify-center rounded-md bg-[#3f8f2f] px-5 text-sm font-semibold text-white transition hover:bg-[#347728] sm:w-auto md:h-12 md:max-w-none md:px-6 md:text-base"
+                className="hidden h-10 w-full max-w-sm items-center justify-center rounded-md bg-[#3f8f2f] px-5 text-sm font-semibold text-white transition hover:bg-[#347728] sm:w-auto md:inline-flex md:h-12 md:max-w-none md:px-6 md:text-base"
               >
                 Get a Free Quote <ArrowRight className="ml-2 size-4" />
               </Link>
@@ -55,7 +55,7 @@ export function HeroSection() {
             </div>
           </div>
 
-          <div className="absolute bottom-[-1.25rem] left-1/2 z-20 w-full max-w-5xl -translate-x-1/2 px-6 md:bottom-[-3rem] lg:bottom-[-4.5rem]">
+          <div className="relative z-20 mt-3 w-full max-w-5xl px-0 md:absolute md:bottom-[-3rem] md:left-1/2 md:mt-0 md:-translate-x-1/2 md:px-6 lg:bottom-[-4.5rem]">
             <div className="grid gap-4 rounded-xl border border-white/20 bg-[#0b2d16]/95 p-4 shadow-sm sm:grid-cols-3 sm:gap-3 sm:rounded-2xl sm:p-5 sm:shadow-xl">
               {HIGHLIGHTS.map(({ title, description, Icon }) => (
                 <article key={title} className="flex items-start gap-2 rounded-lg p-1 text-white sm:gap-3 sm:rounded-xl sm:p-2">
@@ -69,6 +69,15 @@ export function HeroSection() {
                 </article>
               ))}
             </div>
+          </div>
+
+          <div className="mt-5 flex justify-center md:hidden">
+            <Link
+              to="/contact"
+              className="inline-flex h-10 w-full max-w-sm items-center justify-center rounded-md bg-[#3f8f2f] px-5 text-sm font-semibold text-white transition hover:bg-[#347728]"
+            >
+              Get a Free Quote
+            </Link>
           </div>
         </div>
       </div>
