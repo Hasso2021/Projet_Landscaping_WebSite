@@ -29,20 +29,20 @@ export function HeroSection() {
         style={{ backgroundImage: `url(${heroImage})` }}
       >
         <div className="absolute inset-0 bg-gradient-to-r from-[#062411]/78 via-[#062411]/45 to-transparent" />
-        <div className="relative z-10 mx-auto flex h-full w-full max-w-7xl items-center px-6 pb-28 pt-14 md:pb-32 md:pt-16 lg:pb-40 lg:pt-24">
+        <div className="relative z-10 mx-auto flex h-full w-full max-w-7xl items-center px-6 pb-24 pt-12 md:pb-32 md:pt-16 lg:pb-40 lg:pt-24">
           <div className="max-w-2xl text-white lg:mt-6">
             <h1 className="text-center text-4xl font-bold leading-tight sm:text-left md:text-5xl lg:text-6xl">
               RELIABLE SERVICE.
               <br />
               <span className="text-[#7ccf4d]">BEAUTIFUL RESULTS.</span>
             </h1>
-            <p className="mt-5 text-center text-base text-white/90 sm:text-left md:text-lg">
+            <p className="mt-4 text-center text-base text-white/90 sm:text-left md:text-lg">
               Professional landscape maintenance for homes and businesses in Dublin.
             </p>
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center md:mt-8">
+            <div className="mb-8 mt-5 flex flex-col gap-3 sm:flex-row sm:items-center md:mb-0 md:mt-8">
               <Link
                 to="/contact"
-                className="inline-flex h-11 w-full items-center justify-center rounded-md bg-[#3f8f2f] px-5 text-sm font-semibold text-white transition hover:bg-[#347728] sm:w-auto md:h-12 md:px-6 md:text-base"
+                className="inline-flex h-10 w-full max-w-sm items-center justify-center rounded-md bg-[#3f8f2f] px-5 text-sm font-semibold text-white transition hover:bg-[#347728] sm:w-auto md:h-12 md:max-w-none md:px-6 md:text-base"
               >
                 Get a Free Quote <ArrowRight className="ml-2 size-4" />
               </Link>
@@ -55,11 +55,11 @@ export function HeroSection() {
             </div>
           </div>
 
-          <div className="absolute bottom-[-1.5rem] left-1/2 z-20 w-full max-w-5xl -translate-x-1/2 px-6 md:bottom-[-3rem] lg:bottom-[-4.5rem]">
-            <div className="grid gap-2 rounded-2xl border border-white/20 bg-[#0b2d16]/95 p-3 shadow-md sm:grid-cols-3 sm:gap-3 sm:p-5 sm:shadow-xl">
+          <div className="absolute bottom-[-0.75rem] left-1/2 z-20 w-full max-w-5xl -translate-x-1/2 px-6 md:bottom-[-3rem] lg:bottom-[-4.5rem]">
+            <div className="grid gap-4 rounded-xl border border-white/20 bg-[#0b2d16]/95 p-4 shadow-sm sm:grid-cols-3 sm:gap-3 sm:rounded-2xl sm:p-5 sm:shadow-xl">
               {HIGHLIGHTS.map(({ title, description, Icon }) => (
-                <article key={title} className="flex items-start gap-2 rounded-xl p-1.5 text-white sm:gap-3 sm:p-2">
-                  <div className="rounded-full bg-[#3f8f2f] p-2 sm:p-2.5">
+                <article key={title} className="flex items-start gap-2 rounded-lg p-1 text-white sm:gap-3 sm:rounded-xl sm:p-2">
+                  <div className="rounded-full bg-[#3f8f2f] p-1.5 sm:p-2.5">
                     <Icon className="size-3.5 sm:size-4" />
                   </div>
                   <div>
