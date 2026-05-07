@@ -30,9 +30,9 @@ export function Navbar() {
 
   return (
     <header className={`sticky top-0 z-50 bg-white transition-shadow ${isScrolled ? 'shadow-md' : 'shadow-sm'}`}>
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-2.5">
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-2 md:py-2.5">
         <Link to="/" className="inline-flex items-center gap-3">
-          <img src={mdlLogo} alt="MDL logo" className="h-12 w-12 rounded-sm object-cover" />
+          <img src={mdlLogo} alt="MDL logo" className="h-10 w-10 rounded-sm object-cover md:h-12 md:w-12" />
         </Link>
 
         <nav className="hidden items-center gap-6 lg:flex">
@@ -84,7 +84,7 @@ export function Navbar() {
           <Link
             to="/contact"
             onClick={() => setMenuOpen(false)}
-            className="mt-4 inline-flex h-10 w-full items-center justify-center rounded-md bg-[#3f8f2f] px-4 text-sm font-semibold text-white hover:bg-[#347728]"
+            className="mt-4 hidden h-10 w-full items-center justify-center rounded-md bg-[#3f8f2f] px-4 text-sm font-semibold text-white hover:bg-[#347728] sm:inline-flex"
           >
             Get a Free Quote <ArrowRight className="ml-2 size-4" />
           </Link>

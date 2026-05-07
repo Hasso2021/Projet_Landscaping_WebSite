@@ -12,12 +12,12 @@ const SERVICES = [
 
 export function ServicesSection() {
   return (
-    <section className="w-full bg-white pb-24 pt-36 lg:pt-40">
+    <section className="w-full bg-white pb-20 pt-24 md:pt-32 lg:pb-24 lg:pt-40">
       <div className="mx-auto grid w-full max-w-7xl grid-cols-12 gap-12 px-6">
-        <aside className="col-span-12 space-y-5 lg:col-span-4">
+        <aside className="col-span-12 space-y-4 lg:col-span-4 lg:space-y-5">
           <p className="text-sm font-semibold uppercase tracking-wider text-[#3f8f2f]">Our Services</p>
-          <h2 className="text-4xl font-bold leading-tight text-slate-900">Complete Landscape Care Solutions</h2>
-          <p className="text-lg leading-relaxed text-slate-600">
+          <h2 className="text-3xl font-bold leading-tight text-slate-900 lg:text-4xl">Complete Landscape Care Solutions</h2>
+          <p className="text-base leading-relaxed text-slate-600 lg:text-lg">
             We offer a full range of professional landscaping services to keep your outdoor spaces looking their best
             all year round.
           </p>
