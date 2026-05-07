@@ -39,16 +39,16 @@ export function HeroSection() {
             <p className="mt-4 text-center text-base text-white/90 sm:text-left md:text-lg">
               Professional landscape maintenance for homes and businesses in Dublin.
             </p>
-            <div className="mb-6 mt-5 flex flex-col items-center gap-3 sm:items-start md:mb-0 md:mt-8">
+            <div className="mb-6 mt-5 flex flex-col items-center gap-3 sm:items-start md:mb-0 md:mt-8 md:flex-row md:flex-wrap md:items-center md:gap-4">
               <Link
                 to="/contact"
-                className="inline-flex h-10 w-full max-w-xs items-center justify-center rounded-md bg-[#3f8f2f] px-5 text-sm font-semibold text-white transition hover:bg-[#347728] md:h-12 md:max-w-none md:px-6 md:text-base"
+                className="inline-flex h-10 w-auto shrink-0 items-center justify-center rounded-md bg-[#3f8f2f] px-5 text-sm font-semibold text-white transition hover:bg-[#347728] md:h-12 md:px-6 md:text-base"
               >
-                Get a Free Quote <ArrowRight className="ml-2 size-4" />
+                Get a Free Quote <ArrowRight className="ml-2 size-4 shrink-0" />
               </Link>
               <Link
                 to="/services"
-                className="hidden h-12 w-full items-center justify-center rounded-md border border-white/60 px-6 text-base font-semibold text-white transition hover:bg-white/10 md:inline-flex md:w-auto"
+                className="hidden h-12 shrink-0 items-center justify-center rounded-md border border-white/60 px-6 text-base font-semibold text-white transition hover:bg-white/10 md:inline-flex"
               >
                 Our Services
               </Link>

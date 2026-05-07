@@ -1,8 +1,9 @@
-import { ArrowRight, Menu, Phone, X } from 'lucide-react'
+import { ArrowRight, Menu, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 
 import mdlLogo from '@/assets/mdl-logo.png'
+import { WhatsAppButton, WhatsAppIconLink } from '@/components/WhatsAppButton'
 
 const NAV_LINKS = [
   { to: '/', label: 'Home' },
@@ -43,27 +44,27 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
-          <p className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
-            <Phone className="size-4 text-[#2f7a2f]" />
-            083 123 4567
-          </p>
+        <div className="hidden min-w-0 items-center gap-3 lg:flex">
+          <WhatsAppButton variant="solid" className="h-10 shrink-0 px-3 py-2 text-sm" />
           <Link
             to="/contact"
-            className="inline-flex h-10 items-center rounded-md bg-[#3f8f2f] px-4 text-sm font-semibold text-white hover:bg-[#347728]"
+            className="inline-flex h-10 shrink-0 items-center rounded-md bg-[#3f8f2f] px-4 text-sm font-semibold text-white hover:bg-[#347728]"
           >
             Get a Free Quote <ArrowRight className="ml-2 size-4" />
           </Link>
         </div>
 
-        <button
-          type="button"
-          className="inline-flex rounded-md border border-slate-200 p-2 lg:hidden"
-          onClick={() => setMenuOpen((prev) => !prev)}
-          aria-label="Toggle menu"
-        >
-          {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-        </button>
+        <div className="flex items-center gap-2 lg:hidden">
+          <WhatsAppIconLink />
+          <button
+            type="button"
+            className="inline-flex rounded-md border border-slate-200 p-2"
+            onClick={() => setMenuOpen((prev) => !prev)}
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+        </div>
       </div>
 
       {menuOpen ? (
@@ -84,7 +85,7 @@ export function Navbar() {
           <Link
             to="/contact"
             onClick={() => setMenuOpen(false)}
-            className="mt-4 hidden h-10 w-full items-center justify-center rounded-md bg-[#3f8f2f] px-4 text-sm font-semibold text-white hover:bg-[#347728] sm:inline-flex"
+            className="mt-4 flex min-h-12 w-full items-center justify-center rounded-md bg-[#3f8f2f] px-4 text-sm font-semibold text-white hover:bg-[#347728]"
           >
             Get a Free Quote <ArrowRight className="ml-2 size-4" />
           </Link>

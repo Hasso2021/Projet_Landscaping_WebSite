@@ -1,11 +1,12 @@
 import { type FormEvent, useState } from 'react'
 import { Building2, Mail, MessageSquareText, Phone, User } from 'lucide-react'
 
+import { WhatsAppButton } from '@/components/WhatsAppButton'
 import { Button } from '@/components/ui/button'
+import { CONTACT_DISPLAY_PHONE, CONTACT_TEL_HREF } from '@/constants/contact'
 import { supabase } from '@/lib/supabase'
 import { cn } from '@/lib/utils'
 
-type LeadSource = 'Google' | 'Referral' | 'Other'
 type ServiceType =
   | 'Lawn Mowing'
   | 'Hedge Cutting'
@@ -14,12 +15,14 @@ type ServiceType =
   | 'Power Washing'
   | 'Waste Removal'
 
+type ServiceSelection = '' | ServiceType
+
 type LeadFormData = {
   name: string
   email: string
   phone: string
   company: string
-  contactReason: ServiceType
+  contactReason: ServiceSelection
   details: string
 }
 
@@ -27,19 +30,25 @@ type LeadFormErrors = {
   name?: string
   email?: string
   phone?: string
+  contactReason?: string
 }
 
 type LeadInsertPayload = {
   name: string
-  email: string
-  phone: string | null
-  source: LeadSource
-  interest: string | null
+  email: string | null
+  phone: string
+  source: 'website'
+  interest: string
   note: string
   created_at: string
 }
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+/** Digits-only length check (E.164 local or international Irish numbers). */
+const PHONE_DIGITS_MIN = 9
+const PHONE_DIGITS_MAX = 15
+
 const SERVICE_OPTIONS: ServiceType[] = [
   'Lawn Mowing',
   'Hedge Cutting',
@@ -54,7 +63,7 @@ const INITIAL_FORM_DATA: LeadFormData = {
   email: '',
   phone: '',
   company: '',
-  contactReason: 'Lawn Mowing',
+  contactReason: '',
   details: '',
 }
 
@@ -68,20 +77,25 @@ function controlClassName(invalid: boolean) {
   )
 }
 
-function toLeadPayload(data: LeadFormData): LeadInsertPayload {
+function countPhoneDigits(input: string): number {
+  return input.replace(/\D/g, '').length
+}
+
+function toLeadPayload(data: LeadFormData & { contactReason: ServiceType }): LeadInsertPayload {
   const trimmedDetails = data.details.trim()
   const company = data.company.trim()
-  const noteLines = [
-    `Contact reason: ${data.contactReason}`,
-    `Company: ${company || 'Not provided'}`,
-    `Details: ${trimmedDetails || 'No additional details provided'}`,
-  ]
+  const trimmedEmail = data.email.trim().toLowerCase()
+
+  const noteLines = [`Interest/service: ${data.contactReason}`, `Company: ${company || 'Not provided'}`]
+  if (trimmedDetails) {
+    noteLines.push(`Message: ${trimmedDetails}`)
+  }
 
   return {
     name: data.name.trim(),
-    email: data.email.trim().toLowerCase(),
-    phone: data.phone.trim() || null,
-    source: 'Other',
+    email: trimmedEmail === '' ? null : trimmedEmail,
+    phone: data.phone.trim(),
+    source: 'website',
     interest: data.contactReason,
     note: noteLines.join('\n'),
     created_at: new Date().toISOString(),
@@ -119,14 +133,22 @@ export function LeadForm() {
       nextErrors.name = 'Name is required.'
     }
 
-    if (!data.email.trim()) {
-      nextErrors.email = 'Email is required.'
-    } else if (!EMAIL_REGEX.test(data.email.trim())) {
+    const trimmedEmail = data.email.trim()
+    if (trimmedEmail && !EMAIL_REGEX.test(trimmedEmail)) {
       nextErrors.email = 'Please enter a valid email address.'
     }
 
     if (!data.phone.trim()) {
       nextErrors.phone = 'Phone number is required.'
+    } else {
+      const digits = countPhoneDigits(data.phone)
+      if (digits < PHONE_DIGITS_MIN || digits > PHONE_DIGITS_MAX) {
+        nextErrors.phone = `Enter a phone number with ${PHONE_DIGITS_MIN}–${PHONE_DIGITS_MAX} digits (numbers only when counting digits).`
+      }
+    }
+
+    if (!data.contactReason) {
+      nextErrors.contactReason = 'Please select a service or interest.'
     }
 
     return nextErrors
@@ -149,7 +171,7 @@ export function LeadForm() {
     setIsSubmitting(true)
 
     try {
-      const payload = toLeadPayload(formData)
+      const payload = toLeadPayload(formData as LeadFormData & { contactReason: ServiceType })
       const { error } = await supabase.from('leads').insert(payload)
 
       if (error) {
@@ -173,23 +195,26 @@ export function LeadForm() {
       <div className="mt-8 grid gap-10 lg:grid-cols-[0.42fr_0.58fr]">
         <aside className="space-y-6 border-slate-200 lg:border-r lg:pr-8">
           <div>
-            <p className="text-2xl font-semibold text-[#3e61b6]">Dublin Office</p>
+            <p className="text-2xl font-semibold text-[#3e61b6]">MDL Landscape Maintenance</p>
             <p className="mt-5 text-lg leading-relaxed text-slate-700">
-              Unit 4-5, The Capel Building,
+              Professional landscaping and garden maintenance across Dublin.
               <br />
-              Mary's Abbey, North City,
-              <br />
-              Dublin 7, D07 Y318.
+              Prefer WhatsApp or a quick call? We respond fastest by phone or message.
             </p>
           </div>
 
-          <div className="space-y-3 text-lg text-slate-700">
+          <div className="space-y-4 text-lg text-slate-700">
             <p>
-              <span className="font-semibold text-[#3e61b6]">E:</span> info@mdllandscapemaintenance.ie
+              <span className="font-semibold text-[#3e61b6]">Phone</span>{' '}
+              <a className="text-[#2f7a2f] underline-offset-4 hover:underline" href={CONTACT_TEL_HREF}>
+                {CONTACT_DISPLAY_PHONE}
+              </a>
             </p>
-            <p>
-              <span className="font-semibold text-[#3e61b6]">T:</span> (01) 889 9100
+            <p className="text-base text-slate-600">
+              <span className="font-semibold text-[#3e61b6]">Email</span> (optional){' '}
+              <span className="text-slate-700">info@mdllandscapemaintenance.ie</span>
             </p>
+            <WhatsAppButton className="min-h-[2.75rem] w-full text-base shadow-md sm:w-auto sm:min-w-[10rem]" />
           </div>
         </aside>
 
@@ -204,7 +229,6 @@ export function LeadForm() {
                 id="name"
                 name="name"
                 type="text"
-                required
                 autoComplete="name"
                 value={formData.name}
                 onChange={(event) => {
@@ -225,15 +249,45 @@ export function LeadForm() {
             </div>
 
             <div className="space-y-2">
+              <label htmlFor="phone" className="flex items-center gap-2 text-sm font-medium leading-none">
+                <Phone className="size-4 shrink-0 text-slate-500" aria-hidden />
+                Phone*
+              </label>
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                autoComplete="tel"
+                inputMode="tel"
+                value={formData.phone}
+                onChange={(event) => {
+                  clearStatus()
+                  setFormData((prev) => ({ ...prev, phone: event.target.value }))
+                  setErrors((prev) => ({ ...prev, phone: undefined }))
+                }}
+                className={controlClassName(Boolean(errors.phone))}
+                placeholder="083 123 4567"
+                aria-invalid={Boolean(errors.phone)}
+                aria-describedby={errors.phone ? 'phone-error' : undefined}
+              />
+              {errors.phone ? (
+                <p id="phone-error" className="text-sm text-destructive" role="alert">
+                  {errors.phone}
+                </p>
+              ) : null}
+            </div>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div className="space-y-2">
               <label htmlFor="email" className="flex items-center gap-2 text-sm font-medium leading-none">
                 <Mail className="size-4 shrink-0 text-slate-500" aria-hidden />
-                Email*
+                Email (optional)
               </label>
               <input
                 id="email"
                 name="email"
                 type="email"
-                required
                 autoComplete="email"
                 value={formData.email}
                 onChange={(event) => {
@@ -249,36 +303,6 @@ export function LeadForm() {
               {errors.email ? (
                 <p id="email-error" className="text-sm text-destructive" role="alert">
                   {errors.email}
-                </p>
-              ) : null}
-            </div>
-          </div>
-
-          <div className="grid gap-6 sm:grid-cols-2">
-            <div className="space-y-2">
-              <label htmlFor="phone" className="flex items-center gap-2 text-sm font-medium leading-none">
-                <Phone className="size-4 shrink-0 text-slate-500" aria-hidden />
-                Phone Number*
-              </label>
-              <input
-                id="phone"
-                name="phone"
-                type="tel"
-                autoComplete="tel"
-                value={formData.phone}
-                onChange={(event) => {
-                  clearStatus()
-                  setFormData((prev) => ({ ...prev, phone: event.target.value }))
-                  setErrors((prev) => ({ ...prev, phone: undefined }))
-                }}
-                className={controlClassName(Boolean(errors.phone))}
-                placeholder="+1 555 010 2030"
-                aria-invalid={Boolean(errors.phone)}
-                aria-describedby={errors.phone ? 'phone-error' : undefined}
-              />
-              {errors.phone ? (
-                <p id="phone-error" className="text-sm text-destructive" role="alert">
-                  {errors.phone}
                 </p>
               ) : null}
             </div>
@@ -306,7 +330,7 @@ export function LeadForm() {
           <div className="space-y-2">
             <label htmlFor="contactReason" className="flex items-center gap-2 text-sm font-medium leading-none">
               <MessageSquareText className="size-4 shrink-0 text-muted-foreground" aria-hidden />
-              Select Contact Reason
+              Service / interest*
             </label>
             <div className="relative">
               <select
@@ -315,13 +339,20 @@ export function LeadForm() {
                 value={formData.contactReason}
                 onChange={(event) => {
                   clearStatus()
-                  setFormData((prev) => ({ ...prev, contactReason: event.target.value as ServiceType }))
+                  setFormData((prev) => ({ ...prev, contactReason: event.target.value as ServiceSelection }))
+                  setErrors((prev) => ({ ...prev, contactReason: undefined }))
                 }}
+                aria-invalid={Boolean(errors.contactReason)}
+                aria-describedby={errors.contactReason ? 'contactReason-error' : undefined}
                 className={cn(
-                  controlClassName(false),
-                  'h-11 cursor-pointer appearance-none rounded-md border border-[#3e61b6] bg-[#4d73cf] px-4 py-0 font-medium text-white'
+                  controlClassName(Boolean(errors.contactReason)),
+                  'h-11 min-h-11 cursor-pointer appearance-none rounded-md border border-[#3e61b6] bg-[#4d73cf] px-4 py-0 font-medium text-white',
+                  Boolean(errors.contactReason) && '!border-destructive'
                 )}
               >
+                <option value="" disabled>
+                  Select a service…
+                </option>
                 {SERVICE_OPTIONS.map((service) => (
                   <option key={service} value={service}>
                     {service}
@@ -337,12 +368,17 @@ export function LeadForm() {
                 </svg>
               </span>
             </div>
+            {errors.contactReason ? (
+              <p id="contactReason-error" className="text-sm text-destructive" role="alert">
+                {errors.contactReason}
+              </p>
+            ) : null}
           </div>
 
           <div className="space-y-2">
             <label htmlFor="details" className="flex items-center gap-2 text-sm font-medium leading-none">
               <MessageSquareText className="size-4 shrink-0 text-muted-foreground" aria-hidden />
-              Details*
+              Message <span className="font-normal text-muted-foreground">(optional)</span>
             </label>
             <textarea
               id="details"
@@ -354,7 +390,7 @@ export function LeadForm() {
                 setFormData((prev) => ({ ...prev, details: event.target.value }))
               }}
               className={cn(controlClassName(false), 'min-h-[8rem] resize-y')}
-              placeholder="Tell us more about your request."
+              placeholder="Tell us about your garden, schedule, or any access notes."
             />
           </div>
 
@@ -362,10 +398,10 @@ export function LeadForm() {
             <Button
               type="submit"
               size="lg"
-              className="w-full min-w-[10rem] bg-[#2f7a2f] text-white hover:bg-[#265f26] sm:w-auto"
+              className="min-h-11 w-full min-w-[10rem] bg-[#2f7a2f] text-white hover:bg-[#265f26] sm:w-auto"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Submitting...' : 'Submit'}
+              {isSubmitting ? 'Submitting…' : 'Submit'}
             </Button>
             {isSubmitted ? (
               <p

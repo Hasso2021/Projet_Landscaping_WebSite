@@ -1,5 +1,7 @@
 import { Clock3, MapPin, Phone } from 'lucide-react'
 
+import { CONTACT_DISPLAY_PHONE, CONTACT_TEL_HREF } from '@/constants/contact'
+
 export function Topbar() {
   return (
     <div className="w-full bg-[#0b2d16] text-white">
@@ -9,10 +11,10 @@ export function Topbar() {
             <MapPin className="size-3.5" />
             Dublin, Ireland
           </p>
-          <p className="hidden items-center gap-1.5 sm:inline-flex">
-            <Phone className="size-3.5" />
-            083 123 4567
-          </p>
+          <a className="hidden items-center gap-1.5 sm:inline-flex" href={CONTACT_TEL_HREF}>
+            <Phone className="size-3.5 shrink-0" />
+            <span>{CONTACT_DISPLAY_PHONE}</span>
+          </a>
           <p className="hidden items-center gap-1.5 md:inline-flex">
             <Clock3 className="size-3.5" />
             Mon - Sat: 8:00 AM - 6:00 PM
