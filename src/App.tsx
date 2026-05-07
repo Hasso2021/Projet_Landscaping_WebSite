@@ -20,7 +20,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 
 function PageShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="w-full min-h-screen bg-white text-slate-900">
+    <div className="w-full min-h-screen max-w-full overflow-x-hidden bg-white text-slate-900">
       <Topbar />
       <Navbar />
       {children}
@@ -31,9 +31,11 @@ function PageShell({ children }: { children: React.ReactNode }) {
 function LandingPage() {
   return (
     <PageShell>
-      <HeroSection />
-      <ServicesSection />
-      <CTASection />
+      <main className="w-full min-w-0 max-w-full overflow-x-hidden">
+        <HeroSection />
+        <ServicesSection />
+        <CTASection />
+      </main>
     </PageShell>
   )
 }

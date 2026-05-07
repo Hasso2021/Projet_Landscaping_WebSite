@@ -29,9 +29,9 @@ export function HeroSection() {
         style={{ backgroundImage: `url(${heroImage})` }}
       >
         <div className="absolute inset-0 bg-gradient-to-r from-[#062411]/78 via-[#062411]/45 to-transparent" />
-        <div className="relative z-10 mx-auto flex h-full w-full max-w-7xl flex-col items-center px-6 pb-24 pt-12 md:items-start md:pb-32 md:pt-16 lg:pb-40 lg:pt-24">
-          <div className="max-w-2xl text-white lg:mt-6">
-            <h1 className="text-center text-4xl font-bold leading-tight sm:text-left md:text-5xl lg:text-6xl">
+        <div className="relative z-10 mx-auto flex h-full w-full min-w-0 max-w-7xl flex-col items-center px-6 pb-24 pt-12 md:items-start md:pb-32 md:pt-16 lg:pb-40 lg:pt-24">
+          <div className="min-w-0 max-w-2xl text-white lg:mt-6">
+            <h1 className="break-words text-center text-4xl font-bold leading-tight sm:text-left md:text-5xl lg:text-6xl">
               RELIABLE SERVICE.
               <br />
               <span className="text-[#7ccf4d]">BEAUTIFUL RESULTS.</span>
@@ -55,16 +55,16 @@ export function HeroSection() {
             </div>
           </div>
 
-          <div className="static bottom-auto left-auto right-auto z-20 mt-6 w-full max-w-[90vw] translate-y-0 px-0 md:absolute md:bottom-[-4rem] md:left-1/2 md:mt-0 md:w-full md:max-w-5xl md:-translate-x-1/2 md:px-6 lg:bottom-[-4.5rem]">
-            <div className="flex flex-col gap-4 rounded-xl border border-white/20 bg-[#0b2d16]/95 p-4 text-left shadow-sm md:grid md:grid-cols-3 md:gap-3 md:rounded-2xl md:p-5 md:shadow-xl">
+          <div className="static bottom-auto left-auto right-auto z-20 mt-6 w-full max-w-full min-w-0 translate-y-0 px-0 md:absolute md:bottom-[-4rem] md:left-1/2 md:mt-0 md:w-full md:max-w-5xl md:-translate-x-1/2 md:px-6 lg:bottom-[-4.5rem]">
+            <div className="flex max-w-full flex-col gap-4 rounded-xl border border-white/20 bg-[#0b2d16]/95 p-4 text-left shadow-sm md:grid md:grid-cols-3 md:gap-3 md:rounded-2xl md:p-5 md:shadow-xl">
               {HIGHLIGHTS.map(({ title, description, Icon }) => (
-                <article key={title} className="flex items-start gap-3 rounded-lg p-1 text-white md:gap-3 md:rounded-xl md:p-2">
-                  <div className="rounded-full bg-[#3f8f2f] p-1.5 md:p-2.5">
+                <article key={title} className="flex min-w-0 items-start gap-3 rounded-lg p-1 text-white md:gap-3 md:rounded-xl md:p-2">
+                  <div className="shrink-0 rounded-full bg-[#3f8f2f] p-1.5 md:p-2.5">
                     <Icon className="size-3.5 md:size-4" />
                   </div>
-                  <div>
-                    <h3 className="text-sm font-semibold md:text-base">{title}</h3>
-                    <p className="text-xs text-emerald-100 md:text-sm">{description}</p>
+                  <div className="min-w-0">
+                    <h3 className="break-words text-sm font-semibold md:text-base">{title}</h3>
+                    <p className="break-words text-xs text-emerald-100 md:text-sm">{description}</p>
                   </div>
                 </article>
               ))}

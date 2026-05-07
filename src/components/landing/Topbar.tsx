@@ -3,9 +3,9 @@ import { Clock3, MapPin, Phone } from 'lucide-react'
 export function Topbar() {
   return (
     <div className="w-full bg-[#0b2d16] text-white">
-      <div className="mx-auto flex h-10 w-full max-w-7xl items-center justify-between px-6 text-sm">
-        <div className="flex items-center gap-3 sm:gap-5">
-          <p className="inline-flex items-center gap-1.5">
+      <div className="mx-auto flex h-10 w-full min-w-0 max-w-7xl items-center justify-between gap-2 px-6 text-sm">
+        <div className="flex min-w-0 flex-1 items-center gap-3 sm:gap-5">
+          <p className="inline-flex min-w-0 items-center gap-1.5 truncate">
             <MapPin className="size-3.5" />
             Dublin, Ireland
           </p>
@@ -18,7 +18,7 @@ export function Topbar() {
             Mon - Sat: 8:00 AM - 6:00 PM
           </p>
         </div>
-        <div className="flex items-center gap-3 text-[11px] font-semibold text-white/90">
+        <div className="flex shrink-0 items-center gap-3 text-[11px] font-semibold text-white/90">
           <span>f</span>
           <span>ig</span>
           <span>wa</span>

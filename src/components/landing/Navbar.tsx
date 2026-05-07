@@ -29,8 +29,8 @@ export function Navbar() {
     }`
 
   return (
-    <header className={`sticky top-0 z-50 bg-white transition-shadow ${isScrolled ? 'shadow-md' : 'shadow-sm'}`}>
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-2 md:py-2.5">
+    <header className={`sticky top-0 z-50 w-full max-w-full overflow-x-hidden bg-white transition-shadow ${isScrolled ? 'shadow-md' : 'shadow-sm'}`}>
+      <div className="mx-auto flex w-full min-w-0 max-w-7xl items-center justify-between px-6 py-2 md:py-2.5">
         <Link to="/" className="inline-flex items-center gap-3">
           <img src={mdlLogo} alt="MDL logo" className="h-10 w-10 rounded-sm object-cover md:h-12 md:w-12" />
         </Link>
