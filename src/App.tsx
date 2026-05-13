@@ -1,4 +1,7 @@
 import { LeadForm } from '@/components/LeadForm'
+import { AdminDashboardPage } from '@/components/admin/AdminDashboardPage'
+import { AdminLoginPage } from '@/components/admin/AdminLoginPage'
+import { RequireAdmin } from '@/components/admin/RequireAdmin'
 import { CTASection } from '@/components/landing/CTASection'
 import { HeroSection } from '@/components/landing/HeroSection'
 import { Navbar } from '@/components/landing/Navbar'
@@ -202,6 +205,15 @@ function PlaceholderPage({ title }: { title: string }) {
 export default function App() {
   return (
     <Routes>
+      <Route path="/admin/login" element={<AdminLoginPage />} />
+      <Route
+        path="/admin/dashboard"
+        element={
+          <RequireAdmin>
+            <AdminDashboardPage />
+          </RequireAdmin>
+        }
+      />
       <Route path="/" element={<LandingPage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/services" element={<PlaceholderPage title="Services" />} />

@@ -1,9 +1,11 @@
 import { type FormEvent, useState } from 'react'
-import { Building2, Mail, MessageSquareText, Phone, User } from 'lucide-react'
+import { Building2, Globe, Mail, MessageSquareText, Phone, User } from 'lucide-react'
 
 import { WhatsAppButton } from '@/components/WhatsAppButton'
 import { Button } from '@/components/ui/button'
+import { business } from '@/config/business'
 import { CONTACT_DISPLAY_PHONE, CONTACT_TEL_HREF } from '@/constants/contact'
+import { notifyOwnerOfNewLead } from '@/lib/notifyOwnerOfNewLead'
 import { supabase } from '@/lib/supabase'
 import { cn } from '@/lib/utils'
 
@@ -17,11 +19,22 @@ type ServiceType =
 
 type ServiceSelection = '' | ServiceType
 
+const SOURCE_OPTIONS = ['online', 'referral', 'other'] as const
+type SourceValue = (typeof SOURCE_OPTIONS)[number]
+type SourceSelection = '' | SourceValue
+
+const SOURCE_FIELD_OPTIONS: { value: SourceValue; label: string }[] = [
+  { value: 'online', label: 'Online' },
+  { value: 'referral', label: 'Referral' },
+  { value: 'other', label: 'Other' },
+]
+
 type LeadFormData = {
   name: string
   email: string
   phone: string
   company: string
+  source: SourceSelection
   contactReason: ServiceSelection
   details: string
 }
@@ -30,6 +43,7 @@ type LeadFormErrors = {
   name?: string
   email?: string
   phone?: string
+  source?: string
   contactReason?: string
 }
 
@@ -37,9 +51,10 @@ type LeadInsertPayload = {
   name: string
   email: string | null
   phone: string
-  source: 'website'
-  interest: string
-  note: string
+  source: 'online' | 'referral' | 'other'
+  interest_service: string
+  message: string | null
+  company: string | null
   created_at: string
 }
 
@@ -63,6 +78,7 @@ const INITIAL_FORM_DATA: LeadFormData = {
   email: '',
   phone: '',
   company: '',
+  source: '',
   contactReason: '',
   details: '',
 }
@@ -81,23 +97,19 @@ function countPhoneDigits(input: string): number {
   return input.replace(/\D/g, '').length
 }
 
-function toLeadPayload(data: LeadFormData & { contactReason: ServiceType }): LeadInsertPayload {
+function toLeadPayload(data: LeadFormData & { contactReason: ServiceType; source: SourceValue }): LeadInsertPayload {
   const trimmedDetails = data.details.trim()
   const company = data.company.trim()
   const trimmedEmail = data.email.trim().toLowerCase()
-
-  const noteLines = [`Interest/service: ${data.contactReason}`, `Company: ${company || 'Not provided'}`]
-  if (trimmedDetails) {
-    noteLines.push(`Message: ${trimmedDetails}`)
-  }
 
   return {
     name: data.name.trim(),
     email: trimmedEmail === '' ? null : trimmedEmail,
     phone: data.phone.trim(),
-    source: 'website',
-    interest: data.contactReason,
-    note: noteLines.join('\n'),
+    source: data.source,
+    interest_service: data.contactReason,
+    message: trimmedDetails || null,
+    company: company || null,
     created_at: new Date().toISOString(),
   }
 }
@@ -151,6 +163,12 @@ export function LeadForm() {
       nextErrors.contactReason = 'Please select a service or interest.'
     }
 
+    if (!data.source) {
+      nextErrors.source = 'Please tell us how you heard about us.'
+    } else if (!SOURCE_OPTIONS.includes(data.source as SourceValue)) {
+      nextErrors.source = 'Please select a valid option.'
+    }
+
     return nextErrors
   }
 
@@ -171,13 +189,26 @@ export function LeadForm() {
     setIsSubmitting(true)
 
     try {
-      const payload = toLeadPayload(formData as LeadFormData & { contactReason: ServiceType })
+      const payload = toLeadPayload(
+        formData as LeadFormData & { contactReason: ServiceType; source: SourceValue }
+      )
       const { error } = await supabase.from('leads').insert(payload)
 
       if (error) {
         setSubmitError(mapSubmitError(error))
         return
       }
+
+      void notifyOwnerOfNewLead({
+        name: payload.name,
+        phone: payload.phone,
+        email: payload.email,
+        company: payload.company,
+        interest_service: payload.interest_service,
+        source: payload.source,
+        message: payload.message,
+        created_at: payload.created_at,
+      })
 
       setIsSubmitted(true)
       setFormData(INITIAL_FORM_DATA)
@@ -212,7 +243,7 @@ export function LeadForm() {
             </p>
             <p className="text-base text-slate-600">
               <span className="font-semibold text-[#3e61b6]">Email</span> (optional){' '}
-              <span className="text-slate-700">info@mdllandscapemaintenance.ie</span>
+              <span className="text-slate-700">{business.publicContactEmail}</span>
             </p>
             <WhatsAppButton className="min-h-[2.75rem] w-full text-base shadow-md sm:w-auto sm:min-w-[10rem]" />
           </div>
@@ -266,7 +297,7 @@ export function LeadForm() {
                   setErrors((prev) => ({ ...prev, phone: undefined }))
                 }}
                 className={controlClassName(Boolean(errors.phone))}
-                placeholder="083 123 4567"
+                placeholder={business.ownerPhoneDisplay}
                 aria-invalid={Boolean(errors.phone)}
                 aria-describedby={errors.phone ? 'phone-error' : undefined}
               />
@@ -325,6 +356,54 @@ export function LeadForm() {
                 placeholder="Your company"
               />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="lead-source" className="flex items-center gap-2 text-sm font-medium leading-none">
+              <Globe className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+              How did you hear about us?*
+            </label>
+            <div className="relative">
+              <select
+                id="lead-source"
+                name="source"
+                value={formData.source}
+                onChange={(event) => {
+                  clearStatus()
+                  setFormData((prev) => ({ ...prev, source: event.target.value as SourceSelection }))
+                  setErrors((prev) => ({ ...prev, source: undefined }))
+                }}
+                aria-invalid={Boolean(errors.source)}
+                aria-describedby={errors.source ? 'lead-source-error' : undefined}
+                className={cn(
+                  controlClassName(Boolean(errors.source)),
+                  'h-11 min-h-11 cursor-pointer appearance-none rounded-md border border-[#3e61b6] bg-[#4d73cf] px-4 py-0 font-medium text-white',
+                  Boolean(errors.source) && '!border-destructive'
+                )}
+              >
+                <option value="" disabled>
+                  Select an option...
+                </option>
+                {SOURCE_FIELD_OPTIONS.map(({ value, label }) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+              <span
+                className="pointer-events-none absolute inset-y-0 right-0 flex w-10 items-center justify-center text-white"
+                aria-hidden
+              >
+                <svg className="size-4 opacity-80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+            </div>
+            {errors.source ? (
+              <p id="lead-source-error" className="text-sm text-destructive" role="alert">
+                {errors.source}
+              </p>
+            ) : null}
           </div>
 
           <div className="space-y-2">
