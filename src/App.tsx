@@ -1,4 +1,5 @@
 import { LeadForm } from '@/components/LeadForm'
+import { WhatsAppButton } from '@/components/WhatsAppButton'
 import { AdminDashboardPage } from '@/components/admin/AdminDashboardPage'
 import { AdminLoginPage } from '@/components/admin/AdminLoginPage'
 import { RequireAdmin } from '@/components/admin/RequireAdmin'
@@ -6,6 +7,7 @@ import { CTASection } from '@/components/landing/CTASection'
 import { HeroSection } from '@/components/landing/HeroSection'
 import { Navbar } from '@/components/landing/Navbar'
 import { ServicesSection } from '@/components/landing/ServicesSection'
+import { SERVICES } from '@/components/landing/services'
 import { Topbar } from '@/components/landing/Topbar'
 import heroImage from '@/assets/garden-bg.png'
 import afterLawnCut from '@/assets/gallery/after-lawn-cut.jpg'
@@ -17,9 +19,9 @@ import hedgeMaintenance from '@/assets/gallery/hedge-maintenance.jpg'
 import mapleTreeLandscaping from '@/assets/gallery/maple-tree-landscaping.jpg'
 import plantBedAfter from '@/assets/gallery/plant-bed-after.jpg'
 import plantBedBefore from '@/assets/gallery/plant-bed-before.jpg'
-import { UserRound, X } from 'lucide-react'
+import { ArrowRight, BadgeEuro, Leaf, MapPin, ShieldCheck, ThumbsUp, X } from 'lucide-react'
 import { useState } from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Link, Navigate, Route, Routes } from 'react-router-dom'
 
 function PageShell({ children }: { children: React.ReactNode }) {
   return (
@@ -186,16 +188,168 @@ function GalleryPage() {
   )
 }
 
-function PlaceholderPage({ title }: { title: string }) {
+const WHY_CHOOSE_US = [
+  {
+    title: 'Reliable service',
+    description: 'We show up when we say we will and keep your garden looking its best all year round.',
+    Icon: ThumbsUp,
+  },
+  {
+    title: 'Fully insured',
+    description: 'Your property is in safe hands with a fully insured landscaping and maintenance service.',
+    Icon: ShieldCheck,
+  },
+  {
+    title: 'Local Dublin service',
+    description: 'Based in Dublin and proudly serving homes and businesses across the surrounding areas.',
+    Icon: MapPin,
+  },
+  {
+    title: 'Free quotes',
+    description: 'Tell us what you need and we will give you a clear, no-obligation quote for the work.',
+    Icon: BadgeEuro,
+  },
+]
+
+function AboutPage() {
   return (
     <PageShell>
-      <main className="mx-auto w-full max-w-[1280px] px-4 py-16 sm:px-6 lg:px-8">
-        <section className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm">
-          <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-[#2f7a2f]">
-            <UserRound className="size-4" /> Coming Soon
+      <main className="mx-auto w-full max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
+        <section className="rounded-2xl bg-[linear-gradient(100deg,#103d19_0%,#1a5a24_60%,#2f7a2f_100%)] px-6 py-10 text-white sm:px-8">
+          <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-emerald-200">
+            <Leaf className="size-4 shrink-0" /> About Us
           </p>
-          <h1 className="mt-4 text-4xl font-bold">{title}</h1>
-          <p className="mt-3 text-lg text-slate-600">This page is available in navigation and will be filled with content soon.</p>
+          <h1 className="mt-3 break-words text-4xl font-bold sm:text-5xl">About MDL Landscape Maintenance</h1>
+          <p className="mt-3 text-lg text-emerald-100">Home &nbsp;&gt;&nbsp; About</p>
+        </section>
+
+        <section className="mt-8 grid gap-8 lg:grid-cols-2 lg:gap-12">
+          <div className="min-w-0 space-y-4">
+            <p className="text-sm font-semibold uppercase tracking-wider text-[#3f8f2f]">Who we are</p>
+            <h2 className="max-w-full break-words text-3xl font-bold leading-tight text-slate-900 lg:text-4xl">
+              Dublin-based landscaping and garden maintenance
+            </h2>
+            <p className="max-w-full break-words text-base leading-relaxed text-slate-600 lg:text-lg">
+              MDL Landscape Maintenance is a Dublin-based landscaping and garden maintenance service working with both
+              residential and small commercial customers. We focus on practical, dependable work that keeps your
+              outdoor spaces clean, tidy, healthy and well maintained.
+            </p>
+            <p className="max-w-full break-words text-base leading-relaxed text-slate-600 lg:text-lg">
+              From regular lawn care to seasonal clean-ups, we take pride in doing the job properly and leaving your
+              garden looking its best. We are fully insured and always happy to provide a free, no-obligation quote.
+            </p>
+          </div>
+
+          <div className="min-w-0 overflow-hidden rounded-2xl shadow-md">
+            <img
+              src={heroImage}
+              alt="Well maintained garden in Dublin by MDL Landscape Maintenance"
+              className="h-full w-full object-cover"
+            />
+          </div>
+        </section>
+
+        <section className="mt-12">
+          <div className="max-w-2xl">
+            <p className="text-sm font-semibold uppercase tracking-wider text-[#3f8f2f]">Why choose us</p>
+            <h2 className="mt-2 break-words text-3xl font-bold leading-tight text-slate-900 lg:text-4xl">
+              A reliable local service you can count on
+            </h2>
+          </div>
+
+          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
+            {WHY_CHOOSE_US.map(({ title, description, Icon }) => (
+              <article
+                key={title}
+                className="w-full min-w-0 max-w-full overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-md transition duration-300 hover:-translate-y-[5px] hover:shadow-xl"
+              >
+                <div className="inline-flex rounded-full bg-emerald-50 p-3">
+                  <Icon className="size-6 shrink-0 text-[#3f8f2f]" />
+                </div>
+                <h3 className="mt-4 min-w-0 break-words text-xl font-semibold text-slate-900">{title}</h3>
+                <p className="mt-2 min-w-0 break-words text-base leading-relaxed text-slate-600">{description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-12">
+          <div className="rounded-2xl bg-[linear-gradient(100deg,#103d19_0%,#1a5a24_60%,#2f7a2f_100%)] px-6 py-10 text-white shadow-sm sm:px-8">
+            <h3 className="break-words text-3xl font-bold">Need help with your garden?</h3>
+            <p className="mt-2 text-emerald-100">Get in touch for a free, no-obligation quote in Dublin.</p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link
+                to="/contact"
+                className="inline-flex h-11 items-center justify-center rounded-md bg-white px-6 text-sm font-semibold text-[#1f5d22] transition hover:bg-emerald-50"
+              >
+                Get a Free Quote <ArrowRight className="ml-2 size-4 shrink-0" />
+              </Link>
+              <WhatsAppButton variant="solid" className="h-11" />
+            </div>
+          </div>
+        </section>
+      </main>
+    </PageShell>
+  )
+}
+
+function ServicesPage() {
+  return (
+    <PageShell>
+      <main className="mx-auto w-full max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
+        <section className="rounded-2xl bg-[linear-gradient(100deg,#103d19_0%,#1a5a24_60%,#2f7a2f_100%)] px-6 py-10 text-white sm:px-8">
+          <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-emerald-200">
+            <Leaf className="size-4 shrink-0" /> Our Services
+          </p>
+          <h1 className="mt-3 break-words text-4xl font-bold sm:text-5xl">Our Services</h1>
+          <p className="mt-3 text-lg text-emerald-100">Home &nbsp;&gt;&nbsp; Services</p>
+        </section>
+
+        <section className="mt-8 max-w-3xl">
+          <p className="max-w-full break-words text-base leading-relaxed text-slate-600 lg:text-lg">
+            We offer a full range of practical landscaping and garden maintenance services for homes and small
+            businesses across Dublin. Whatever your garden needs, we help keep it clean, tidy, healthy and well
+            maintained.
+          </p>
+        </section>
+
+        <section className="mt-8">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {SERVICES.map(({ title, description, Icon }) => (
+              <article
+                key={title}
+                className="flex w-full min-w-0 max-w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-md transition duration-300 hover:-translate-y-[5px] hover:shadow-xl"
+              >
+                <div className="inline-flex w-fit rounded-full bg-emerald-50 p-3">
+                  <Icon className="size-7 shrink-0 text-[#3f8f2f]" />
+                </div>
+                <h3 className="mt-4 min-w-0 break-words text-xl font-semibold text-slate-900">{title}</h3>
+                <p className="mt-2 min-w-0 flex-1 break-words text-base leading-relaxed text-slate-600">{description}</p>
+                <Link
+                  to="/contact"
+                  className="mt-4 inline-flex items-center text-sm font-semibold text-[#2f7a2f] transition-colors hover:text-[#265f26]"
+                >
+                  Get a Free Quote <ArrowRight className="ml-1.5 size-4 shrink-0" />
+                </Link>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-12">
+          <div className="rounded-2xl bg-[linear-gradient(100deg,#103d19_0%,#1a5a24_60%,#2f7a2f_100%)] px-6 py-10 text-white shadow-sm sm:px-8">
+            <h3 className="break-words text-3xl font-bold">Need a reliable landscaping service in Dublin?</h3>
+            <p className="mt-2 text-emerald-100">Tell us what you need and we will get back to you with a free quote.</p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link
+                to="/contact"
+                className="inline-flex h-11 items-center justify-center rounded-md bg-white px-6 text-sm font-semibold text-[#1f5d22] transition hover:bg-emerald-50"
+              >
+                Get a Free Quote <ArrowRight className="ml-2 size-4 shrink-0" />
+              </Link>
+              <WhatsAppButton variant="solid" className="h-11" />
+            </div>
+          </div>
         </section>
       </main>
     </PageShell>
@@ -216,8 +370,8 @@ export default function App() {
       />
       <Route path="/" element={<LandingPage />} />
       <Route path="/contact" element={<ContactPage />} />
-      <Route path="/services" element={<PlaceholderPage title="Services" />} />
-      <Route path="/about" element={<PlaceholderPage title="About Us" />} />
+      <Route path="/services" element={<ServicesPage />} />
+      <Route path="/about" element={<AboutPage />} />
       <Route path="/gallery" element={<GalleryPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
